@@ -12,9 +12,13 @@ RUN apt update && \
   mv /tmp/extract/usr/bin/atatus-php-collector /usr/bin/atatus-php-collector && \
   mv /tmp/extract/usr/lib/atatus-php/x86_64/atatus_php_zts_8.4.so /usr/lib/frankenphp/modules/atatus.so && \
   mkdir /etc/atatus && mkdir /etc/frankenphp/php.d && \
-  mkdir -p /var/log/atatus && touch /var/log/atatus/collector.log && \
   groupadd -g 1000 -r nhsla && \
-  useradd -u 1000 -r -g nhsla -d /home/nhsla -s /bin/bash nhsla
+  useradd -u 1000 -r -g nhsla -d /home/nhsla -s /bin/bash nhsla && \
+  ln -s /dev/stdout /var/log/stdout.log && \
+  ln -s /dev/stderr /var/log/stderr.log && \
+  chown -R nhsla:nhsla /var/log/stdout.log && \
+  chown -R nhsla:nhsla /var/log/stderr.log && \
+  mkdir -p /nhsla/logs/atatus && mkdir -p /nhsla/run && chown -R nhsla:nhsla /nhsla
 
 COPY rootfs /
 COPY index.php /app/index.php
@@ -22,4 +26,5 @@ COPY index.php /app/index.php
 #ENTRYPOINT ["/usr/bin/tini", "--"]
 #CMD ["/usr/local/bin/frankenphp", "php-server", "--access-log", "--root", "/app"]
 #CMD ["/bin/sh", "-c", "/usr/bin/atatus-php-collector & exec /usr/local/bin/frankenphp php-server --access-log --root /app"]
+HEALTHCHECK CMD curl -f http://localhost:2019/metrics || exit 1
 ENTRYPOINT ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
