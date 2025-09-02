@@ -50,12 +50,13 @@ jobs:
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: ${{ env.REGISTRY }}/${{ env.ORG }}/${{ env.IMAGE_NAME }}:8.3-alpine
-          format: 'sarif'
-          output: 'trivy-results83alpine.sarif'
+#          format: 'sarif'
+          format: 'table'
+#          output: 'trivy-results83alpine.sarif'
           severity: 'CRITICAL,HIGH'
           ignore-unfixed: true
 
-      - name: Upload Trivy PHP 8.3 Alpine results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: 'trivy-results83alpine.sarif'
+#      - name: Upload Trivy PHP 8.3 Alpine results to GitHub Security tab
+#        uses: github/codeql-action/upload-sarif@v3
+#        with:
+#          sarif_file: 'trivy-results83alpine.sarif'
