@@ -1,0 +1,69 @@
+FROM alpine AS builder
+
+ENV SUPERCRONIC_URL=https://github.com/aptible/supercronic/releases/download/v0.2.34/supercronic-linux-amd64 \
+    SUPERCRONIC=supercronic-linux-amd64 \
+    SUPERCRONIC_SHA1SUM=e8631edc1775000d119b70fd40339a7238eece14
+
+RUN apk update && \
+  apk add curl wget gpg --no-cache && \
+  cd /tmp && mkdir extract && \
+  wget --progress=dot:giga -O atatus.tar.gz https://s3.amazonaws.com/atatus-artifacts/atatus-php/downloads/atatus-php-1.17.0-x64-debian.tar.gz -O atatus.tar.gz && \
+  tar -xzf atatus.tar.gz -C extract --strip-components=1 && \
+  curl -fsSLO "$SUPERCRONIC_URL" && \
+  echo "${SUPERCRONIC_SHA1SUM}  ${SUPERCRONIC}" | sha1sum -c - && \
+  chmod +x "$SUPERCRONIC" && \
+  mv "$SUPERCRONIC" "/tmp/supercronic" 
+
+FROM dunglas/frankenphp:php8.3-alpine
+
+ARG USER=nhsla
+ARG UID=1000
+ARG GID=1000
+ENV XDG_CONFIG_HOME=/nhsla/config
+ENV XDG_DATA_HOME=/nhsla/data
+
+COPY --from=builder /tmp/extract/usr/bin/atatus-php-collector /usr/bin/atatus-php-collector
+COPY --from=builder /tmp/extract/usr/lib/atatus-php/x86_64/atatus_php_zts_8.3.so /tmp/atatus.so
+COPY --from=builder /tmp/supercronic /usr/local/bin/supercronic
+COPY rootfs /
+
+RUN mkdir /etc/atatus && \
+  mkdir /etc/frankenphp/php.d && \
+  mkdir -p /usr/lib/frankenphp/modules && \
+  mkdir -p /nhsla/logs/atatus && mkdir -p /nhsla/run && mkdir -p /nhsla/data/caddy && \
+  EXT_DIR=$(php-config --extension-dir) && \
+  cp /tmp/atatus.so "$EXT_DIR/atatus.so" && \
+  rm /tmp/atatus.so && \
+  install-php-extensions \
+    apcu \
+    curl \
+    xml \
+    gd \
+    mbstring \
+    zip \ 
+    ldap \
+    bcmath \
+    opcache \
+    imagick \
+    sqlite3 \
+    intl \
+    redis \
+    pgsql && \
+    addgroup -g ${GID} -S ${USER} && \
+    adduser -u ${UID} -S -G ${USER} -h /home/nhsla -s /bin/bash nhsla && \
+  chown -R ${USER}:${USER} /etc/atatus /nhsla
+
+COPY --chown=${UID}:${UID} index.php /app/index.php
+COPY --chown=${UID}:${UID} index-broken.php /app/index-broken.php
+COPY --chown=${UID}:${UID} cron.php /app/cron.php
+
+USER ${UID}
+HEALTHCHECK CMD curl -f http://localhost:2019/metrics || exit 1
+
+# App entrypoint
+ENTRYPOINT ["docker-php-entrypoint"]
+CMD ["--config", "/etc/frankenphp/Caddyfile", "--adapter", "caddyfile"]
+
+# Cron entrypoint
+#ENTRYPOINT ["/usr/local/bin/supercronic"]
+#CMD ["-overlapping", "-split-logs", "/nhsla/cron"]
