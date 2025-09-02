@@ -53,10 +53,6 @@ RUN mkdir /etc/atatus && \
     adduser -u ${UID} -S -G ${USER} -h /home/nhsla -s /bin/bash nhsla && \
   chown -R ${USER}:${USER} /etc/atatus /nhsla
 
-COPY --chown=${UID}:${UID} index.php /app/index.php
-COPY --chown=${UID}:${UID} index-broken.php /app/index-broken.php
-COPY --chown=${UID}:${UID} cron.php /app/cron.php
-
 USER ${UID}
 HEALTHCHECK CMD curl -f http://localhost:2019/metrics || exit 1
 

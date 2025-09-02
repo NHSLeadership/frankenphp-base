@@ -1,0 +1,1 @@
+*/1 * * * * /usr/local/bin/php /app/cron.php
