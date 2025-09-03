@@ -14,7 +14,7 @@ RUN apk update && \
   chmod +x "$SUPERCRONIC" && \
   mv "$SUPERCRONIC" "/tmp/supercronic" 
 
-FROM dunglas/frankenphp:php8.3-alpine
+FROM dunglas/frankenphp:php8.1-alpine
 
 ARG USER=nhsla
 ARG UID=1000
@@ -23,7 +23,7 @@ ENV XDG_CONFIG_HOME=/nhsla/config
 ENV XDG_DATA_HOME=/nhsla/data
 
 COPY --from=builder /tmp/extract/usr/bin/atatus-php-collector /usr/bin/atatus-php-collector
-COPY --from=builder /tmp/extract/usr/lib/atatus-php/x86_64/atatus_php_zts_8.3.so /tmp/atatus.so
+COPY --from=builder /tmp/extract/usr/lib/atatus-php/x86_64/atatus_php_zts_8.1.so /tmp/atatus.so
 COPY --from=builder /tmp/supercronic /usr/local/bin/supercronic
 COPY rootfs /
 
