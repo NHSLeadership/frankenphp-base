@@ -53,6 +53,7 @@ RUN mkdir /etc/atatus && \
     adduser -u ${UID} -S -G ${USER} -h /home/nhsla -s /bin/bash nhsla && \
     apk add bash ssmtp --no-cache && \
   ln -s /nhsla/rw/atatus.ini /usr/local/etc/php/conf.d/a-atatus.ini && \
+  ln -s /nhsla/rw/phpsess.ini /usr/local/etc/php/conf.d/b-phpsess.ini && \
   ln -s /nhsla/rw/ssmtp.conf /etc/ssmtp.conf && \
   chown -R ${USER}:${USER} /etc/atatus /nhsla && \
   date > /image_base_build_date

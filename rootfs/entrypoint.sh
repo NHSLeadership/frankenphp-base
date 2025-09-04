@@ -26,10 +26,9 @@ cp /nhsla/ro/atatus.ini /nhsla/rw/atatus.ini
 if [ "${ATATUS_ENABLED:-false}" = "true" ] && [ ! -z "$ATATUS_APM_LICENSE_KEY" ]; then
   # If Atatus is enabled and API key set then configure Atatus
   sed -i -e "s/atatus.license_key = \"\"/atatus.license_key = \"$ATATUS_APM_LICENSE_KEY\"/g" /nhsla/rw/atatus.ini
-  sed -i -e "s/atatus.release_stage = \"production\"/atatus.release_stage = \"$ENVIRONMENT\"/g" /nhsla/rw/atatus.ini
-  sed -i -e "s/atatus.app_name = \"PHP App\"/atatus.app_name = \"$SITE_NAME\"/g" /nhsla/rw/atatus.ini
-  sed -i -e "s/atatus.app_version = \"\"/atatus.app_version = \"$SITE_BRANCH-$BUILD\"/g" /nhsla/rw/atatus.ini
-  sed -i -e "s/atatus.tags = \"\"/atatus.tags = \"$SITE_BRANCH-$BUILD, $SITE_BRANCH\"/g" /nhsla/rw/atatus.ini
+  sed -i -e "s/atatus.app_name = \"PHP App\"/atatus.app_name = \"$APP_NAME\"/g" /nhsla/rw/atatus.ini
+  sed -i -e "s/atatus.release_stage = \"production\"/atatus.release_stage = \"$APP_ENV\"/g" /nhsla/rw/atatus.ini
+  sed -i -e "s/atatus.app_version = \"\"/atatus.app_version = \"$APP_VERSION\"/g" /nhsla/rw/atatus.ini
 fi
 #####
 
@@ -48,11 +47,11 @@ fi
 
 # Override the Redis session host
 cp /nhsla/ro/phpsess.ini /nhsla/rw/phpsess.ini
-if [ ! -z "$PHP_SESSION_HANDLER" ]; then
-  sed -i -e "s|session.save_handler = .*|session.save_handler = $PHP_SESSION_HANDLER|g" /nhsla/rw/phpsess.ini
-fi
-if [ ! -z "$PHP_SESSION_SAVE_PATH" ]; then
-  sed -i -e "s|session.save_path = .*|session.save_path = \"$PHP_SESSION_SAVE_PATH\"|g" /nhsla/rw/phpsess.ini
+#if [ ! -z "$PHP_SESSION_HANDLER" ]; then
+#  sed -i -e "s|session.save_handler = .*|session.save_handler = $PHP_SESSION_HANDLER|g" /nhsla/rw/phpsess.ini
+#fi
+if [ ! -z "$REDIS_HOST" ]; then
+  sed -i -e "s|session.save_path = .*|session.save_path = \"$REDIS_HOST\"|g" /nhsla/rw/phpsess.ini
 fi
 
 
@@ -60,8 +59,7 @@ fi
 # Environment-specific setup
 case "${APP_ENV:-production}" in
     "development"|"dev")
-        echo "Development mode - enabling debug features"
-        export LOG_LEVEL=debug
+        echo "Development mode"
         ;;
     "staging")
         echo "Staging mode"

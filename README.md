@@ -52,15 +52,11 @@ serving the same site and as such PHP sessions should be centralised. The defaul
 
 |Variable      |Description      |Default      |
 | ------------ | --------------- | ----------- |
+|CONTAINER_MODE | web, cron, or worker | web |
 |ATATUS_ENABLED | Boolean to enable or disable Atatus APM | false |
 |ATATUS_APM_LICENSE_KEY |Provides a licence key to enable the Atatus APM PHP module. Disabled Atatus APM if not set. | |
-
-
-|BUILD |A build number from your CICD system, used to form the app version in Atatus. | |
-|ENVIRONMENT |Name of environment container is deployed to. Mainly used to configure PHP logging and the Atatus release stage | |
-| MAIL_HOST | Set the SMTP mail host for the system's SSMTP mail relay service | outbound.kube-mail:25 |
-| REDIS_SESSIONS | Tells PHP FPM to use Redis for a session store. | false |
-| REDIS_HOST | Combined with above. Sets the redis hostname and port | redis:6379 |
-| ROLE | Set to CRON or WORKER on the PHP-FPM container to swap the php-fpm service for supercronic. Place cron files in /nhsla/cron |  |
-| SITE_NAME | A name for the site. Mainly used for the Atatus application name |  |
-| SITE_BRANCH | A branch from your code repository. Used to form the app version in Atatus |  |
+|REDIS_HOST | Provide the path to Redis for PHP session storage. | tcp://redis:6379 |
+|MAIL_RELAY | Set the SMTP mail host for the system's SSMTP mail relay service | outbound.kube-mail:25 |
+|APP_NAME | The name of the application to be passed to Atatus | "PHP App" |
+|APP_ENV | The name of the environment to be passed to Atatus | null |
+|APP_VERSION | The version of the app | null |
