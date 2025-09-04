@@ -52,6 +52,8 @@ RUN mkdir /etc/atatus && \
     addgroup -g ${GID} -S ${USER} && \
     adduser -u ${UID} -S -G ${USER} -h /home/nhsla -s /bin/bash nhsla && \
     apk add ssmtp --no-cache && \
+  ln -s /nhsla/rw/atatus.ini /usr/local/etc/php/conf.d/a-atatus.ini && \
+  ln -s /nhsla/rw/ssmtp.conf /etc/ssmtp.conf && \
   chown -R ${USER}:${USER} /etc/atatus /nhsla && \
   date > /image_base_build_date
 
@@ -59,9 +61,12 @@ USER ${UID}
 HEALTHCHECK CMD curl -f http://localhost:2019/metrics || exit 1
 
 # App entrypoint
-ENTRYPOINT ["docker-php-entrypoint"]
-CMD ["--config", "/etc/frankenphp/Caddyfile", "--adapter", "caddyfile"]
+#ENTRYPOINT ["docker-php-entrypoint"]
+#CMD ["--config", "/etc/frankenphp/Caddyfile", "--adapter", "caddyfile"]
 
 # Cron entrypoint
 #ENTRYPOINT ["/usr/local/bin/supercronic"]
 #CMD ["-overlapping", "-split-logs", "/nhsla/cron"]
+
+# Our real entrypoint
+ENTRYPOINT ["/entrypoint.sh"]

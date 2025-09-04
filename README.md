@@ -48,10 +48,20 @@ We use SSMTP to forward mail upstream. The defaults are to send email to `outbou
 Because we run these containers in a Kubernetes cluster it is assumed there will be multiple containers
 serving the same site and as such PHP sessions should be centralised. The default host for this is `tcp://redis:6379`.
 
-# Atatus Configuration
+## Environment Variables
 
-Should be a file mounted at /usr/local/etc/php/conf.d/10-atatus.ini or similar containing:
+|Variable      |Description      |Default      |
+| ------------ | --------------- | ----------- |
+|ATATUS_ENABLED | Boolean to enable or disable Atatus APM | false |
+|ATATUS_APM_LICENSE_KEY |Provides a licence key to enable the Atatus APM PHP module. Disabled Atatus APM if not set. | |
 
-```
 
-```
+|BUILD |A build number from your CICD system, used to form the app version in Atatus. | |
+|ENVIRONMENT |Name of environment container is deployed to. Mainly used to configure PHP logging and the Atatus release stage | |
+| MAIL_HOST | Set the SMTP mail host for the system's SSMTP mail relay service | outbound.kube-mail |
+| MAIL_PORT | Set the SMTP mail port for the system's SSMTP mail relay service | 25 |
+| REDIS_SESSIONS | Tells PHP FPM to use Redis for a session store. | false |
+| REDIS_HOST | Combined with above. Sets the redis hostname and port | redis:6379 |
+| ROLE | Set to CRON or WORKER on the PHP-FPM container to swap the php-fpm service for supercronic. Place cron files in /nhsla/cron |  |
+| SITE_NAME | A name for the site. Mainly used for the Atatus application name |  |
+| SITE_BRANCH | A branch from your code repository. Used to form the app version in Atatus |  |
