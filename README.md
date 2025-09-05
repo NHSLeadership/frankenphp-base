@@ -12,7 +12,8 @@ mounts.
 
 ## Usage
 
-By default this container runs with it's index at /app.
+By default this container runs with it's index at /app-shared. Your application need to be copied into /app
+during build, with a pre-entrypoint.sh script that copies it into app-shared on container boot.
 
 To modify PHP variables place a .ini file (e.g. 10-nhsla-custom.ini) in /usr/local/etc/php/conf.d
 
