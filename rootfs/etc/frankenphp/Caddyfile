@@ -97,7 +97,7 @@
     php_server
 }
 
-:2019 {
+:9253 {
     handle /metrics {
         metrics
     }
