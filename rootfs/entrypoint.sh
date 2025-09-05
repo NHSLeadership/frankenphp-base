@@ -54,8 +54,6 @@ if [ ! -z "$REDIS_HOST" ]; then
   sed -i -e "s|session.save_path = .*|session.save_path = \"$REDIS_HOST\"|g" /nhsla/rw/phpsess.ini
 fi
 
-
-
 # Environment-specific setup
 case "${APP_ENV:-production}" in
     "development"|"dev")
