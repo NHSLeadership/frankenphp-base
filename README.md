@@ -55,8 +55,8 @@ serving the same site and as such PHP sessions should be centralised. The defaul
 |CONTAINER_MODE | web, cron, or worker | web |
 |ATATUS_ENABLED | Boolean to enable or disable Atatus APM | false |
 |ATATUS_APM_LICENSE_KEY |Provides a licence key to enable the Atatus APM PHP module. Disabled Atatus APM if not set. | |
+|ATATUS_ENABLED | The name of the application to be passed to Atatus | "PHP App" |
 |REDIS_HOST | Provide the path to Redis for PHP session storage. | tcp://redis:6379 |
 |MAIL_RELAY | Set the SMTP mail host for the system's SSMTP mail relay service | outbound.kube-mail:25 |
-|APP_NAME | The name of the application to be passed to Atatus | "PHP App" |
 |APP_ENV | The name of the environment to be passed to Atatus | null |
-|APP_VERSION | The version of the app | null |
+|APP_VERSION | The version of the app | Set by the upstream container |
