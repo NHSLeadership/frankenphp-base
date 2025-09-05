@@ -3,8 +3,8 @@ set -e
 
 # Startup logging
 echo "=== Container Startup ==="
-echo "App name: ${ATATUS_APP_NAME:app}"
-echo "App version: ${APP_VERSION:none}"
+echo "App name: ${ATATUS_APP_NAME:-app}"
+echo "App version: ${APP_VERSION:-none}"
 echo "Container mode: ${CONTAINER_MODE:-web}"
 echo "Environment: ${APP_ENV:-production}"
 echo "Atatus: ${ATATUS_ENABLED:-false}"
@@ -77,7 +77,7 @@ case "${CONTAINER_MODE:-web}" in
         ;;
     "worker")
         echo "Starting worker container..."
-        exec php /app/artisan queue:work --sleep=3 --tries=3
+        exec php /app/artisan queue:work --sleep=3 --tries=3 --timeout=1800 --queue="${QUEUE_NAMES:-default}"
         ;;
     "web"|*)
         echo "Starting web server..."
