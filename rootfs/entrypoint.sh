@@ -3,6 +3,8 @@ set -e
 
 # Startup logging
 echo "=== Container Startup ==="
+echo "App name: ${ATATUS_APP_NAME:app}"
+echo "App version: ${APP_VERSION:none}"
 echo "Container mode: ${CONTAINER_MODE:-web}"
 echo "Environment: ${APP_ENV:-production}"
 echo "Atatus: ${ATATUS_ENABLED:-false}"
@@ -26,7 +28,7 @@ cp /nhsla/ro/atatus.ini /nhsla/rw/atatus.ini
 if [ "${ATATUS_ENABLED:-false}" = "true" ] && [ ! -z "$ATATUS_APM_LICENSE_KEY" ]; then
   # If Atatus is enabled and API key set then configure Atatus
   sed -i -e "s/atatus.license_key = \"\"/atatus.license_key = \"$ATATUS_APM_LICENSE_KEY\"/g" /nhsla/rw/atatus.ini
-  sed -i -e "s/atatus.app_name = \"PHP App\"/atatus.app_name = \"$APP_NAME\"/g" /nhsla/rw/atatus.ini
+  sed -i -e "s/atatus.app_name = \"PHP App\"/atatus.app_name = \"$ATATUS_APP_NAME\"/g" /nhsla/rw/atatus.ini
   sed -i -e "s/atatus.release_stage = \"production\"/atatus.release_stage = \"$APP_ENV\"/g" /nhsla/rw/atatus.ini
   sed -i -e "s/atatus.app_version = \"\"/atatus.app_version = \"$APP_VERSION\"/g" /nhsla/rw/atatus.ini
 fi
