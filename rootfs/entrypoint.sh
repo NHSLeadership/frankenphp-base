@@ -23,7 +23,7 @@ fi
 mkdir -p /nhsla/rw
 
 # Setup Atatus
-# The php config ini for Atatus is symlinked from /usr/local/etc/php/conf.d/a-atatus.ini to /nhsla/roconfig/atatus.ini
+# The php config ini for Atatus is symlinked from /usr/local/etc/php/conf.d/a-atatus.ini to /nhsla/ro/atatus.ini
 cp /nhsla/ro/atatus.ini /nhsla/rw/atatus.ini
 if [ "${ATATUS_ENABLED:-false}" = "true" ] && [ ! -z "$ATATUS_APM_LICENSE_KEY" ]; then
   # If Atatus is enabled and API key set then configure Atatus
