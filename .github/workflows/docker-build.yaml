@@ -78,21 +78,6 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           file: 'Dockerfile-alpine8.3'
 
-      - name: Trivy scan PHP 8.3 image
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: ${{ env.REGISTRY }}/${{ env.ORG }}/${{ env.IMAGE_NAME }}:8.3-alpine
-#          format: 'sarif'
-          format: 'table'
-#          output: 'trivy-results83alpine.sarif'
-          severity: 'CRITICAL,HIGH'
-          ignore-unfixed: true
-
-#      - name: Upload Trivy PHP 8.3 Alpine results to GitHub Security tab
-#        uses: github/codeql-action/upload-sarif@v3
-#        with:
-#          sarif_file: 'trivy-results83alpine.sarif'
-
   build-php84-image:
     runs-on: ubuntu-latest
     permissions:
@@ -125,17 +110,3 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           file: 'Dockerfile-alpine8.4'
 
-      - name: Trivy scan PHP 8.4 image
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: ${{ env.REGISTRY }}/${{ env.ORG }}/${{ env.IMAGE_NAME }}:8.4-alpine
-#          format: 'sarif'
-          format: 'table'
-#          output: 'trivy-results84alpine.sarif'
-          severity: 'CRITICAL,HIGH'
-          ignore-unfixed: true
-
-#      - name: Upload Trivy PHP 8.4 Alpine results to GitHub Security tab
-#        uses: github/codeql-action/upload-sarif@v3
-#        with:
-#          sarif_file: 'trivy-results84alpine.sarif'
