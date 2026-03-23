@@ -46,21 +46,6 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           file: 'Dockerfile-alpine8.2'
 
-      - name: Trivy scan PHP 8.2 image
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: ${{ env.REGISTRY }}/${{ env.ORG }}/${{ env.IMAGE_NAME }}:8.2-alpine
-#          format: 'sarif'
-          format: 'table'
-#          output: 'trivy-results82alpine.sarif'
-          severity: 'CRITICAL,HIGH'
-          ignore-unfixed: true
-
-#      - name: Upload Trivy PHP 8.2 Alpine results to GitHub Security tab
-#        uses: github/codeql-action/upload-sarif@v3
-#        with:
-#          sarif_file: 'trivy-results82alpine.sarif'
-
   build-php83-image:
     runs-on: ubuntu-latest
     permissions:
